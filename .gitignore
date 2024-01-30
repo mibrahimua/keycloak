@@ -1,1 +1,7 @@
 .idea
+
+data/h2
+
+lib/quarkus/quarkus-application.dat
+lib/quarkus/generated-bytecode.jar
+lib/quarkus/transformed-bytecode.jar

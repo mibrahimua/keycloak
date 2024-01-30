@@ -8,6 +8,11 @@ ENV KC_METRICS_ENABLED=true
 ENV KC_DB=postgres
 
 WORKDIR /opt/keycloak
+
+COPY providers/* /opt/keycloak/providers/
+COPY themes/*   /opt/keycloak/themes/
+COPY conf/quarkus.properties /opt/keycloak/conf/
+
 # for demonstration purposes only, please make sure to use proper certificates in production instead
 RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore conf/server.keystore
 RUN /opt/keycloak/bin/kc.sh build
@@ -22,8 +27,5 @@ ENV KC_DB_PASSWORD=admin123
 ENV KC_DB_URL_PROPERTIES="verifyServerCertificate=false&ssl=allow"
 
 ENV KC_HOSTNAME=localhost
-
-COPY providers/keycloak-provider-1.0-SNAPSHOT.jar /opt/keycloak/providers/
-COPY conf/quarkus.properties /opt/keycloak/conf/
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
