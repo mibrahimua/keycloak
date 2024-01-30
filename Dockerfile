@@ -4,7 +4,7 @@ FROM quay.io/keycloak/keycloak:latest as builder
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 
-# Configure a database vendor
+# change these values to point to a running postgres instance
 ENV KC_DB=postgres
 
 WORKDIR /opt/keycloak
@@ -15,17 +15,15 @@ RUN /opt/keycloak/bin/kc.sh build
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
-# Add the provider JAR file to the providers directory
-#ADD --chown=keycloak:keycloak / /opt/keycloak/providers/myprovider.jar
-
-
-# change these values to point to a running postgres instance
 ENV KC_DB=postgres
-ENV KC_DB_URL=localhost:5432/keycloak
+ENV KC_DB_URL=jdbc:postgresql://postgresuser:5432/keycloak
 ENV KC_DB_USERNAME=postgres123
 ENV KC_DB_PASSWORD=admin123
+ENV KC_DB_URL_PROPERTIES="verifyServerCertificate=false&ssl=allow"
+
 ENV KC_HOSTNAME=localhost
+
+COPY providers/keycloak-provider-1.0-SNAPSHOT.jar /opt/keycloak/providers/
+COPY conf/quarkus.properties /opt/keycloak/conf/
+
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-
-
-RUN /opt/keycloak/bin/kc.sh build
