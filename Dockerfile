@@ -21,7 +21,7 @@ FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
 ENV KC_DB=postgres
-ENV KC_DB_URL=jdbc:postgresql://postgresuser:5432/keycloak
+ENV KC_DB_URL=jdbc:postgresql://postgresserver:5433/keycloak
 ENV KC_DB_USERNAME=postgres123
 ENV KC_DB_PASSWORD=admin123
 ENV KC_DB_URL_PROPERTIES="verifyServerCertificate=false&ssl=allow"
